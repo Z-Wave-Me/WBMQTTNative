@@ -420,7 +420,6 @@ WBMQTTNative.prototype.getDeviceMetaArray = function (device) {
 			break;
 		case WBMQTTNative.zWaveDeviceType.battery:
 			addMetaTopicValue("updatetime", device.get("updateTime"));
-			break;
 		case WBMQTTNative.zWaveDeviceType.sensorMultilevel:
 			addMetaTopicValue("type", "value");
 			addMetaTopicValue("units", device.get("metrics:scaleTitle"));

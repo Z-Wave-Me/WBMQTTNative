@@ -135,6 +135,7 @@ WBMQTTNative.prototype.onConnect = function () {
 	self.log("Connected to " + self.config.host + " as " + self.config.clientId, WBMQTTNative.LoggingLevel.INFO);
 
 	self.controller.devices.on("change:metrics:level", self.updateCallback);
+	self.controller.devices.on("change:updateTime", self.updateCallback);
 	self.controller.devices.on('created', self.addCallback);
 	self.controller.devices.on('removed', self.removeCallback);
 
@@ -159,6 +160,7 @@ WBMQTTNative.prototype.updateDevice = function (device) {
 
 	if (self.shouldSkip(device)) return;
 
+	self.publishDeviceMeta(device);
 	self.publishDeviceValue(device);
 };
 
@@ -191,6 +193,7 @@ WBMQTTNative.prototype.onDisconnect = function () {
 	var self = this;
 
 	self.controller.devices.off("change:metrics:level", self.updateCallback);
+	self.controller.devices.off("change:updateTime", self.updateCallback);
 	self.controller.devices.off("created", self.addCallback);
 	self.controller.devices.off("removed", self.removeCallback);
 
@@ -416,6 +419,7 @@ WBMQTTNative.prototype.getDeviceMetaArray = function (device) {
 			addMetaTopicValue("readonly", "true");
 			break;
 		case WBMQTTNative.zWaveDeviceType.battery:
+			addMetaTopicValue("updatetime", device.get("updateTime"));
 		case WBMQTTNative.zWaveDeviceType.sensorMultilevel:
 			addMetaTopicValue("type", "value");
 			addMetaTopicValue("units", device.get("metrics:scaleTitle"));
